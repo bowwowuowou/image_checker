@@ -84,8 +84,15 @@ function extractHtmlAndCss() {
   };
 }
 
-const titleElem = document.getElementById('page-title');
-const urlElem = document.getElementById('page-url');
-
-titleElem.textContent = document.title;
-urlElem.textContent = location.href;
+(async () => {
+  try {
+    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+    const titleElem = document.getElementById('page-title');
+    const urlElem = document.getElementById('page-url');
+    
+    titleElem.textContent = tab.title || '(タイトルなし)';
+    urlElem.textContent = tab.url || '';
+  } catch (error) {
+    console.error('Error loading tab info:', error);
+  }
+})();
