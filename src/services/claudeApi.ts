@@ -11,7 +11,6 @@ export async function checkWithClaude(
     {
       role: 'user',
       content: [
-        // テキスト部分
         {
           type: 'text',
           text: `以下の本文（HTML/CSS含む）と画像を比較して、誤字・情報誤り・レイアウト崩れをチェックしてください。
@@ -105,7 +104,7 @@ ${text}
     .map((item: any) => item.text)
     .join('');
 
-  // 4. JSONをパース（Claudeが ```json ``` で囲む場合がある）
+  // 4. JSONをパース
   const jsonMatch = responseText.match(/```json\n([\s\S]*?)\n```/) || 
                     responseText.match(/\[[\s\S]*\]/);
   

@@ -14,7 +14,7 @@ export function Header({ apiKey, onApiKeyChange, aiProvider, onAiProviderChange 
             <p className="mt-2 mb-5">AIが本文と画像を照らし合わせ、情報の相違や誤字などがないか調べます。</p>
             
             {/* AI選択 */}
-            <div className="flex justify-center gap-4 mb-4">
+            <div className="flex justify-center items-center gap-4 mb-4 max-w-7xl mx-auto px-6">
                 <select
                 value={aiProvider}
                 onChange={(e) => onAiProviderChange(e.target.value)}
@@ -24,9 +24,10 @@ export function Header({ apiKey, onApiKeyChange, aiProvider, onAiProviderChange 
                 <option value="openai">OpenAI (GPT-4o)</option>
                 <option value="gemini">Gemini</option>
                 </select>
+                <div className="flex-1">
+                    <ApiKeyInput apiKey={apiKey} onApiKeyChange={onApiKeyChange} />
+                </div>
             </div>
-            
-            <ApiKeyInput apiKey={apiKey} onApiKeyChange={onApiKeyChange} />
         </header>
     );
 }

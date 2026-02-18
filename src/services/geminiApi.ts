@@ -96,7 +96,7 @@ ${text}
   const data = await response.json();
   const responseText = data.candidates[0].content.parts[0].text;
 
-  // JSON抽出（改善版）
+  // JSON抽出
   let jsonText = '';
   const codeBlockMatch = responseText.match(/```json\n([\s\S]*?)(\n```|$)/);
   const arrayMatch = responseText.match(/\[[\s\S]*/);

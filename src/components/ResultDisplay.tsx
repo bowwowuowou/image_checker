@@ -32,7 +32,7 @@ export function ResultDisplay({ results, isChecking }: ResultDisplayProps) {
     <div className="bg-white rounded-lg border p-6">
       <h2 className="text-xl font-bold mb-4">チェック結果</h2>
       
-      {/* サマリー */}
+      {/* 重要度 */}
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div className="p-4 bg-red-50 rounded-lg">
           <p className="text-sm text-red-600 font-medium">重大</p>
@@ -48,7 +48,7 @@ export function ResultDisplay({ results, isChecking }: ResultDisplayProps) {
         </div>
       </div>
 
-      {/* 問題一覧 */}
+      {/* 問題リスト */}
       <div className="space-y-3">
         {results.map((result) => (
           <div

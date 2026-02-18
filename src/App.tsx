@@ -43,7 +43,7 @@ function App() {
     setResults([]);
 
     /*
-    // モックデータ（2秒後に表示）
+    // モックデータ
     setTimeout(() => {
       const mockResults: CheckResult[] = [
         {
