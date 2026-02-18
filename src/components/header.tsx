@@ -18,7 +18,7 @@ export function Header({ apiKey, onApiKeyChange, aiProvider, onAiProviderChange 
                 <select
                 value={aiProvider}
                 onChange={(e) => onAiProviderChange(e.target.value)}
-                className="px-3 py-2 border rounded-lg"
+                className="px-3 py-2 border rounded-lg bg-white"
                 >
                 <option value="claude">Claude</option>
                 <option value="openai">OpenAI (GPT-4o)</option>

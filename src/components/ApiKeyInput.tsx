@@ -10,11 +10,11 @@ export function ApiKeyInput({ apiKey, onApiKeyChange }: ApiKeyInputProps) {
 
   if (!isEditing && apiKey) {
     return (
-      <div className="flex items-center gap-2 text-sm">
+      <div className="flex items-center justify-center gap-2 text-sm">
         <span className="text-green-600">✓ APIキー設定済み</span>
         <button
           onClick={() => setIsEditing(true)}
-          className="text-blue-600 hover:underline"
+          className="px-3 text-white hover:underline rounded-full"
         >
           変更
         </button>
