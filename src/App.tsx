@@ -6,8 +6,11 @@ import { ImageUploader } from './components/ImageUploader';
 import { ResultDisplay } from './components/ResultDisplay';
 import type { ImageItem, CheckResult } from './types';
 import { checkWithClaude } from './services/claudeApi';
+import { checkWithOpenAI } from './services/openaiApi';
+import { checkWithGemini } from './services/geminiApi';
 
 function App() {
+  const [aiProvider, setAIProvider] = useState<AIProvider>('claude');
   const [apiKey, setApiKey] = useState('');
   const [text, setText] = useState('');
   const [images, setImages] = useState<ImageItem[]>([]);
@@ -72,7 +75,18 @@ function App() {
     */
   
     try {
-      const checkResults = await checkWithClaude(text, images, apiKey);
+      const checkResults = await (async () => {
+        switch (aiProvider) {
+          case 'claude':
+            return await checkWithClaude(text, images, apiKey);
+          case 'openai':
+            return await checkWithOpenAI(text, images, apiKey);
+          case 'gemini':
+            return await checkWithGemini(text, images, apiKey);
+          default:
+            throw new Error(`未対応のAIプロバイダー: ${aiProvider}`);
+        }
+      })();
       setResults(checkResults);
     } catch (error) {
       console.error('API Error:', error);
@@ -84,7 +98,12 @@ function App() {
   
   return (
     <div>
-      <Header apiKey={apiKey} onApiKeyChange={setApiKey} />
+      <Header 
+        apiKey={apiKey} 
+        onApiKeyChange={setApiKey}
+        aiProvider={aiProvider}
+        onAiProviderChange={setAIProvider}
+      />
       <div className="max-w-7xl mx-auto px-6">
         <main className="space-y-6">
           <div className="bg-white rounded-lg border p-6">

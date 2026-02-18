@@ -1,4 +1,5 @@
 // 型定義を作成
+export type AIProvider = 'claude' | 'openai' | 'gemini';
 
 export interface ImageItem {
     id: string;

@@ -1,17 +1,15 @@
 import type { CheckResult } from '../types';
 
-export async function checkWithClaude(
+export async function checkWithOpenAI(
   text: string,
   images: { preview: string; file: File }[],
   apiKey: string
 ): Promise<CheckResult[]> {
   
-  // 1. リクエストボディを構成
   const messages = [
     {
       role: 'user',
       content: [
-        // テキスト部分
         {
           type: 'text',
           text: `以下の本文（HTML/CSS含む）と画像を比較して、誤字・情報誤り・レイアウト崩れをチェックしてください。
@@ -38,49 +36,37 @@ ${text}
 
 問題がない場合は空の配列 [] を返してください。`
         },
-        // 画像部分（複数対応）
         ...images.map((image) => ({
-          type: 'image',
-          source: {
-            type: 'base64',
-            media_type: image.file.type,
-            data: image.preview.split(',')[1] // "data:image/jpeg;base64," を除去
+          type: 'image_url',
+          image_url: {
+            url: image.preview
           }
         }))
       ]
     }
   ];
 
-  // 2. API呼び出し（proxy経由）
-  const response = await fetch('/api/v1/messages', {
+  const response = await fetch('/openai/v1/chat/completions', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01'
+      'Authorization': `Bearer ${apiKey}`
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-4-20250514',
-      max_tokens: 2000,
-      messages: messages
+      model: 'gpt-4o',
+      messages: messages,
+      max_tokens: 2000
     })
   });
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`API Error: ${response.status} ${errorText}`);
+    throw new Error(`OpenAI API Error: ${response.status} ${errorText}`);
   }
 
-  // 3. レスポンスをパース
   const data = await response.json();
-  
-  // Claude のレスポンスからテキストを取得
-  const responseText = data.content
-    .filter((item: any) => item.type === 'text')
-    .map((item: any) => item.text)
-    .join('');
+  const responseText = data.choices[0].message.content;
 
-  // 4. JSONをパース（Claudeが ```json ``` で囲む場合がある）
   const jsonMatch = responseText.match(/```json\n([\s\S]*?)\n```/) || 
                     responseText.match(/\[[\s\S]*\]/);
   
@@ -91,7 +77,6 @@ ${text}
   const jsonText = jsonMatch[1] || jsonMatch[0];
   const results = JSON.parse(jsonText);
 
-  // 5. IDを追加
   return results.map((result: any, index: number) => ({
     ...result,
     id: `result-${index}`
